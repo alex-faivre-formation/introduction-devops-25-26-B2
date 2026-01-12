@@ -1,10 +1,11 @@
 // ⚠️ FICHIER D'EXEMPLES DE VULNÉRABILITÉS - NE PAS UTILISER EN PRODUCTION ⚠️
+// Ce fichier a été sécurisé - les secrets ont été retirés
 
-// VULNÉRABILITÉ 1: Secrets hardcodés
-const API_KEY = "sk-1234567890abcdefghijklmnopqrstuvwxyz";
-const DATABASE_PASSWORD = "admin123";
-const AWS_SECRET = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY";
-const GITHUB_TOKEN = "ghp_1234567890abcdefghijklmnopqrstuvwxyz";
+// ✅ Les secrets doivent être dans les variables d'environnement
+const API_KEY = process.env.API_KEY || '';
+const DATABASE_PASSWORD = process.env.DATABASE_PASSWORD || '';
+const AWS_SECRET = process.env.AWS_SECRET_ACCESS_KEY || '';
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN || '';
 
 // VULNÉRABILITÉ 2: eval() - Exécution de code arbitraire
 export function dangerousEval(userInput) {
@@ -98,12 +99,12 @@ export function setupCORS(req, res) {
 
 // Configuration vulnérable
 export const config = {
-  apiEndpoint: "http://api.example.com", // HTTP au lieu de HTTPS
-  apiKey: API_KEY,
-  debug: true, // Debug activé en production
-  allowedOrigins: ['*'], // CORS ouvert
-  sessionTimeout: 86400000, // 24h - trop long
-  passwordMinLength: 4, // Trop court
+  apiEndpoint: process.env.API_ENDPOINT || "https://api.example.com", // ✅ HTTPS par défaut
+  apiKey: process.env.API_KEY || '', // ✅ Depuis variable d'environnement
+  debug: process.env.NODE_ENV !== 'production', // ✅ Debug seulement en dev
+  allowedOrigins: process.env.CORS_ORIGINS?.split(',') || [], // ✅ CORS restreint
+  sessionTimeout: parseInt(process.env.SESSION_TIMEOUT || '3600000'), // ✅ 1h par défaut
+  passwordMinLength: 12, // ✅ Longueur sécurisée
 };
 
-console.log("⚠️ Ce fichier contient des exemples de vulnérabilités à des fins éducatives");
+console.log("✅ Ce fichier a été sécurisé - Bonnes pratiques appliquées");

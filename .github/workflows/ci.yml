@@ -26,25 +26,29 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run linter
-        run: npm run lint
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+        - name: Run linter
+          run: npm run lint
 
-      - name: Run formatter check
-        run: npm run format:check
 
-      - name: Run Trivy vulnerability scanner in repo mode
-        uses: aquasecurity/trivy-action@0.33.1
-        with:
-          scan-type: 'fs'
-          ignore-unfixed: true
-          format: 'sarif'
-          output: 'trivy-results.sarif'
-          severity: 'LOW,MEDIUM,HIGH,CRITICAL'
+        - name: Run formatter check
+          run: npm run format:check
 
-      - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v4
-        with:
-          sarif_file: 'trivy-results.sarif'
+        - name: Run Trivy vulnerability scanner in repo mode
+          uses: aquasecurity/trivy-action@0.33.1
+          with:
+            scan-type: 'fs'
+            ignore-unfixed: false
+            format: 'sarif'
+            output: 'trivy-results.sarif'
+            severity: 'LOW,MEDIUM,HIGH,CRITICAL'
 
-      - name: Build application
-        run: npm run build
+        - name: Upload Trivy scan results to GitHub Security tab
+          uses: github/codeql-action/upload-sarif@v4
+          with:
+            sarif_file: 'trivy-results.sarif'
+
+        - name: Build application
+          run: npm run build
