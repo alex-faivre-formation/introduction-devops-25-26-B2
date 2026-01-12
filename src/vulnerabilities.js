@@ -3,7 +3,6 @@
 
 // ✅ Les secrets doivent être dans les variables d'environnement
 const API_KEY = process.env.API_KEY || '';
-const DATABASE_PASSWORD = process.env.DATABASE_PASSWORD || '';
 const AWS_SECRET = process.env.AWS_SECRET_ACCESS_KEY || '';
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN || '';
 
