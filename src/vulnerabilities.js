@@ -21,7 +21,9 @@ export function renderUserContent(userInput) {
 
 // VULNÉRABILITÉ 4: document.write avec données non sanitisées
 export function writeToDocument(data) {
-  document.write(data); // Peut injecter du code malveillant
+  // Utiliser un nœud de texte pour éviter l'interprétation du contenu comme HTML/JS
+  const textNode = document.createTextNode(String(data));
+  document.body.appendChild(textNode);
 }
 
 // VULNÉRABILITÉ 5: Utilisation de Function() constructor (comme eval)
