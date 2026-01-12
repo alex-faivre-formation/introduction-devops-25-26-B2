@@ -45,6 +45,11 @@ jobs:
             output: 'trivy-results.sarif'
             severity: 'LOW,MEDIUM,HIGH,CRITICAL'
 
+        - name: Secret Scanning
+          uses: trufflesecurity/trufflehog@main
+          with:
+            extra_args: --results=verified,unknown --format sarif --output trufflehog-results.sarif
+
         - name: Upload Trivy scan results to GitHub Security tab
           uses: github/codeql-action/upload-sarif@v4
           with:
