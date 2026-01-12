@@ -1,0 +1,37 @@
+version: "3.8"
+
+services:
+  # VULNÉRABILITÉ: Image obsolète
+  web:
+    image: node:14
+    ports:
+      - "3000:3000"
+      - "22:22" # VULNÉRABILITÉ: Port SSH exposé
+    environment:
+      # VULNÉRABILITÉ: Secrets hardcodés
+      - DATABASE_PASSWORD=admin123
+      - API_KEY=sk-1234567890abcdefghijklmnopqrstuvwxyz
+      - JWT_SECRET=my-insecure-jwt-secret
+    # VULNÉRABILITÉ: Privilèges élevés
+    privileged: true
+    # VULNÉRABILITÉ: Pas de limite de ressources
+    volumes:
+      - .:/app
+      - /:/host # VULNÉRABILITÉ: Montage du système hôte
+    command: npm start
+    # VULNÉRABILITÉ: Pas de healthcheck
+    
+  db:
+    image: postgres:9.6 # VULNÉRABILITÉ: Version très obsolète
+    environment:
+      - POSTGRES_PASSWORD=postgres # VULNÉRABILITÉ: Mot de passe par défaut
+      - POSTGRES_USER=postgres
+    # VULNÉRABILITÉ: Pas de volume pour la persistence
+    ports:
+      - "5432:5432" # VULNÉRABILITÉ: Base de données exposée
+      
+  redis:
+    image: redis # VULNÉRABILITÉ: Tag latest
+    ports:
+      - "6379:6379" # VULNÉRABILITÉ: Redis exposé sans mot de passe
+    # VULNÉRABILITÉ: Pas de configuration de sécurité
